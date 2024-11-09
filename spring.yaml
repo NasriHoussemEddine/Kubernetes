@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: houssemnasri/houssemnasri-4carctic-g1-tpachatproject-backend:v1.1.1
+        ports:
+        - containerPort: 8089
+        env:
+        - name: DB_HOST
+          value: "mysql"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "mydatabase"
+        - name: DB_USER
+          value: "houcem"
+        - name: DB_PASSWORD
+          value: "houcem"
+        - name: SERVER_SERVLET_CONTEXT_PATH
+          value: "/SpringMVC"
+        - name: SERVER_PORT
+          value: "8089"
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8089
+      targetPort: 8089
+  type: ClusterIP
