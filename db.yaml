@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/home/kadhem/data"
+    path: "/home/vm/houcem/data"
   storageClassName: ""
 ---
 apiVersion: v1
