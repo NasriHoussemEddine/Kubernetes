@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    
+    environment {
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
+    }
+
+    stages {
+        
+        stage('GIT') {
+            steps {
+                script {
+                    cleanWs()
+                }
+                git branch: 'main',
+                url: 'https://github.com/NasriHoussemEddine/Kubernetes.git',
+                credentialsId: 'gitCredentials'
+                }
+            }
+
+        stage('Deploy Database') {
+            steps {
+                echo "Applying Database YAML..."
+                sh 'minikube kubectl -- apply -f db.yaml'
+            }
+        }
+
+        stage('Deploy Backend App') {
+            steps {
+                echo "Deploying Backend Application..."
+                sh 'minikube kubectl -- apply -f spring.yaml'
+            }
+        }
+        
+        stage('Deploy front App') {
+            steps {
+                echo "Deploying Backend Application..."
+                sh 'minikube kubectl -- apply -f angular.yaml'
+            }
+        }
+       
+    }
+}
